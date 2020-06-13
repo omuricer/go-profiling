@@ -1,0 +1,18 @@
+name: Nginx Docker Build
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: docker build . --file nginx/production.Dockerfile --tag filecan.xyz:5432/fc-nginx
+      - name: Docker Login
+        run: docker login filecan.xyz:5432 -u ${{ secrets.DOCKER_REGISTRY_USERNAME }} -p ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+      - name: Docker Push
+        run: docker push filecan.xyz:5432/fc-nginx

@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  nginx:
+    container_name: go-profiling-nginx
+    image: nginx:latest
+    environment:
+      TZ: Asia/Tokyo
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+  go:
+    container_name: go-profiling-go
+    build: ./go
+    environment:
+      - "GOPATH=/go"
+      - RUN_ENV=local
+    volumes:
+      - ./go/src:/go/src/github.com/omuricer/go-profiling
+    command: bash -c "cd /go/src/github.com/omuricer/go-profiling && realize start --server"
